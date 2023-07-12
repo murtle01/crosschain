@@ -1,0 +1,28 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+
+contract MyNFT is ERC721 {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIdCounter;
+
+    constructor() ERC721("MyNFT", "NFT") {}
+
+    function mint(address to, string memory tokenURI) public returns (uint256) {
+        _tokenIdCounter.increment();
+        uint256 newTokenId = _tokenIdCounter.current();
+        _mint(to, newTokenId);
+        _setTokenURI(newTokenId, tokenURI);
+        return newTokenId;
+    }
+
+    function bridgeToBinance(uint256 tokenId) public {
+        require(ownerOf(tokenId) == msg.sender, "Caller is not the owner");
+        // Call the bridge contract to initiate the transfer from Ethereum to Binance Chain
+        // The bridge contract will handle the locking of the NFT on Ethereum and the minting on Binance Chain
+        // Make sure to pass the required parameters like token ID, token contract address, and recipient address
+        // Example bridge function call: BridgeContract.bridgeNFT(tokenId, address(this), recipientAddress);
+    }
+}
